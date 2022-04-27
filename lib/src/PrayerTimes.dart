@@ -54,8 +54,7 @@ class PrayerTimes {
 
     imsaakTime = new TimeComponents(
             solarTime.hourAngle(-1 * calculationParameters.fajrAngle, false))
-        .utcDate(date.year, date.month, date.day)
-        .add(Duration(minutes: -10)); // default 10 minutes before fajr
+        .utcDate(date.year, date.month, date.day);
 
     DateTime dhuhrTime = new TimeComponents(solarTime.transit)
         .utcDate(date.year, date.month, date.day);
