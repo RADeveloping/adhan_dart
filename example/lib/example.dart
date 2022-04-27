@@ -13,14 +13,18 @@ main() {
   // Parameters
   CalculationParameters params = CalculationMethod.MuslimWorldLeague();
   params.madhab = Madhab.Hanafi;
+  params.adjustments['maghrib'] = 15;
+
   PrayerTimes prayerTimes =
       PrayerTimes(coordinates, date, params, precision: true);
 
   // Prayer times
+  DateTime imsaakTime = tz.TZDateTime.from(prayerTimes.imsaak!, location);
   DateTime fajrTime = tz.TZDateTime.from(prayerTimes.fajr!, location);
   DateTime sunriseTime = tz.TZDateTime.from(prayerTimes.sunrise!, location);
   DateTime dhuhrTime = tz.TZDateTime.from(prayerTimes.dhuhr!, location);
   DateTime asrTime = tz.TZDateTime.from(prayerTimes.asr!, location);
+  DateTime sunsetTime = tz.TZDateTime.from(prayerTimes.sunset!, location);
   DateTime maghribTime = tz.TZDateTime.from(prayerTimes.maghrib!, location);
   DateTime ishaTime = tz.TZDateTime.from(prayerTimes.isha!, location);
 
@@ -49,10 +53,12 @@ main() {
   print('local time:\t$date');
 
   print('\n***** Prayer Times');
+  print('imsaakTime:\t$imsaakTime');
   print('fajrTime:\t$fajrTime');
   print('sunriseTime:\t$sunriseTime');
   print('dhuhrTime:\t$dhuhrTime');
   print('asrTime:\t$asrTime');
+  print('sunsetTime:\t$sunsetTime');
   print('maghribTime:\t$maghribTime');
   print('ishaTime:\t$ishaTime');
 

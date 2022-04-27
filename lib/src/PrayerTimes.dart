@@ -13,10 +13,12 @@ class PrayerTimes {
   late DateTime date;
   late CalculationParameters calculationParameters;
 
+  DateTime? imsaak;
   DateTime? fajr;
   DateTime? sunrise;
   DateTime? dhuhr;
   DateTime? asr;
+  DateTime? sunset;
   DateTime? maghrib;
   DateTime? isha;
   DateTime? ishabefore;
@@ -39,20 +41,27 @@ class PrayerTimes {
     SolarTime solarTimeBefore = new SolarTime(dateBefore, coordinates);
     SolarTime solarTimeAfter = new SolarTime(dateAfter, coordinates);
 
+    DateTime imsaakTime;
     DateTime fajrTime;
     DateTime asrTime;
     DateTime maghribTime;
+    DateTime sunsetTime;
     DateTime ishaTime;
     DateTime ishabeforeTime;
     DateTime fajrafterTime;
 
     double? nightFraction;
 
+    imsaakTime = new TimeComponents(
+            solarTime.hourAngle(-1 * calculationParameters.fajrAngle, false))
+        .utcDate(date.year, date.month, date.day)
+        .add(Duration(minutes: -10)); // default 10 minutes before fajr
+
     DateTime dhuhrTime = new TimeComponents(solarTime.transit)
         .utcDate(date.year, date.month, date.day);
     DateTime sunriseTime = new TimeComponents(solarTime.sunrise)
         .utcDate(date.year, date.month, date.day);
-    DateTime sunsetTime = new TimeComponents(solarTime.sunset)
+    sunsetTime = new TimeComponents(solarTime.sunset)
         .utcDate(date.year, date.month, date.day);
 
     DateTime sunriseafterTime = new TimeComponents(solarTimeAfter.sunrise)
@@ -191,6 +200,8 @@ class PrayerTimes {
     }
 
     // double fajrAdjustment = (calculationParameters.adjustments["fajr"] && 0) + (calculationParameters.methodAdjustments["fajr"] && 0);
+    int imsaakAdjustment = (calculationParameters.adjustments["imsaak"] ?? 0) +
+        (calculationParameters.methodAdjustments["imsaak"] ?? 0);
     int fajrAdjustment = (calculationParameters.adjustments["fajr"] ?? 0) +
         (calculationParameters.methodAdjustments["fajr"] ?? 0);
     int sunriseAdjustment =
@@ -200,12 +211,17 @@ class PrayerTimes {
         (calculationParameters.methodAdjustments["dhuhr"] ?? 0);
     int asrAdjustment = (calculationParameters.adjustments["asr"] ?? 0) +
         (calculationParameters.methodAdjustments["asr"] ?? 0);
+    int sunsetAdjustment = (calculationParameters.adjustments["sunset"] ?? 0) +
+        (calculationParameters.methodAdjustments["sunset"] ?? 0);
     int maghribAdjustment =
         (calculationParameters.adjustments["maghrib"] ?? 0) +
             (calculationParameters.methodAdjustments["maghrib"] ?? 0);
     int ishaAdjustment = (calculationParameters.adjustments["isha"] ?? 0) +
         (calculationParameters.methodAdjustments["isha"] ?? 0);
 
+    this.imsaak = roundedMinute(
+        dateByAddingMinutes(imsaakTime, imsaakAdjustment),
+        precision: precision);
     this.fajr = roundedMinute(dateByAddingMinutes(fajrTime, fajrAdjustment),
         precision: precision);
     this.sunrise = roundedMinute(
@@ -214,6 +230,9 @@ class PrayerTimes {
     this.dhuhr = roundedMinute(dateByAddingMinutes(dhuhrTime, dhuhrAdjustment),
         precision: precision);
     this.asr = roundedMinute(dateByAddingMinutes(asrTime, asrAdjustment),
+        precision: precision);
+    this.sunset = roundedMinute(
+        dateByAddingMinutes(sunsetTime, sunsetAdjustment),
         precision: precision);
     this.maghrib = roundedMinute(
         dateByAddingMinutes(maghribTime, maghribAdjustment),
@@ -230,7 +249,9 @@ class PrayerTimes {
   }
 
   DateTime? timeForPrayer(String prayer) {
-    if (prayer == Prayer.Fajr) {
+    if (prayer == Prayer.Imsaak) {
+      return this.imsaak;
+    } else if (prayer == Prayer.Fajr) {
       return this.fajr;
     } else if (prayer == Prayer.Sunrise) {
       return this.sunrise;
@@ -240,6 +261,8 @@ class PrayerTimes {
       return this.asr;
     } else if (prayer == Prayer.Maghrib) {
       return this.maghrib;
+    } else if (prayer == Prayer.Sunset) {
+      return this.sunset;
     } else if (prayer == Prayer.Isha) {
       return this.isha;
     } else if (prayer == Prayer.IshaBefore) {
@@ -259,6 +282,8 @@ class PrayerTimes {
       return Prayer.Isha;
     } else if (date.isAfter(this.maghrib!)) {
       return Prayer.Maghrib;
+    } else if (date.isAfter(this.sunset!)) {
+      return Prayer.Sunset;
     } else if (date.isAfter(this.asr!)) {
       return Prayer.Asr;
     } else if (date.isAfter(this.dhuhr!)) {
@@ -267,6 +292,8 @@ class PrayerTimes {
       return Prayer.Sunrise;
     } else if (date.isAfter(this.fajr!)) {
       return Prayer.Fajr;
+    } else if (date.isAfter(this.imsaak!)) {
+      return Prayer.Imsaak;
     } else {
       return Prayer.IshaBefore;
     }
@@ -280,16 +307,20 @@ class PrayerTimes {
       return Prayer.FajrAfter;
     } else if (date.isAfter(this.maghrib!)) {
       return Prayer.Isha;
-    } else if (date.isAfter(this.asr!)) {
+    } else if (date.isAfter(this.sunset!)) {
       return Prayer.Maghrib;
+    } else if (date.isAfter(this.asr!)) {
+      return Prayer.Sunset;
     } else if (date.isAfter(this.dhuhr!)) {
       return Prayer.Asr;
     } else if (date.isAfter(this.sunrise!)) {
       return Prayer.Dhuhr;
     } else if (date.isAfter(this.fajr!)) {
       return Prayer.Sunrise;
-    } else {
+    } else if (date.isAfter(this.imsaak!)) {
       return Prayer.Fajr;
+    } else {
+      return Prayer.Imsaak;
     }
   }
 }
