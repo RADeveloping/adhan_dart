@@ -332,8 +332,8 @@ class PrayerTimes {
       'asr': this.asr!,
       'sunset': this.sunset!,
       'maghrib': this.maghrib!,
-      'Isha': this.isha!,
-      'FajrAfter': this.fajrafter!,
+      'isha': this.isha!,
+      'fajrafter': this.fajrafter!,
     };
   }
 }
