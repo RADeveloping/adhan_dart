@@ -323,17 +323,17 @@ class PrayerTimes {
     }
   }
 
-  prayerList() {
+  Map<String, DateTime> prayerList() {
     return {
-      'imsaak': Prayer.Imsaak,
-      'fajr': Prayer.Fajr,
-      'sunrise': Prayer.Sunrise,
-      'dhuhr': Prayer.Dhuhr,
-      'asr': Prayer.Asr,
-      'sunset': Prayer.Sunset,
-      'maghrib': Prayer.Maghrib,
-      'Isha': Prayer.Isha,
-      'FajrAfter': Prayer.FajrAfter,
+      'imsaak': this.imsaak!,
+      'fajr': this.fajr!,
+      'sunrise': this.sunrise!,
+      'dhuhr': this.dhuhr!,
+      'asr': this.asr!,
+      'sunset': this.sunset!,
+      'maghrib': this.maghrib!,
+      'Isha': this.isha!,
+      'FajrAfter': this.fajrafter!,
     };
   }
 }
