@@ -322,4 +322,18 @@ class PrayerTimes {
       return Prayer.Imsaak;
     }
   }
+
+  prayerList() {
+    return {
+      'imsaak': Prayer.Imsaak,
+      'fajr': Prayer.Fajr,
+      'sunrise': Prayer.Sunrise,
+      'dhuhr': Prayer.Dhuhr,
+      'asr': Prayer.Asr,
+      'sunset': Prayer.Sunset,
+      'maghrib': Prayer.Maghrib,
+      'Isha': Prayer.Isha,
+      'FajrAfter': Prayer.FajrAfter,
+    };
+  }
 }
